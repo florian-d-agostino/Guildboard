@@ -25,20 +25,17 @@ public class Character {
     private CharacterGender gender;
     private CharacterClass characterClass;
     private int lvl = 0;
-    private int xp;
-    private int wallet;
+    private int xp = 0;
+    private int wallet = 0;
     private short completedQuest;
     private short totalQuest;
 
 
 
+
+
 public Character() {
 }
-
-
-
-
-
 //--- Getters and Setters ---
 
 
