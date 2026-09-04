@@ -8,10 +8,10 @@ public record UpdateCharacterRequest(
         @Size(min = 2, max = 25)
         String name,
 
-        @NotNull(message = "Choisissez un genre")
+        @NotNull(message = "Make a choice for the gender")
         CharacterGender gender,
 
-        @NotNull(message = "Choisissez une classe")
+        @NotNull(message = "Make a choice for the class")
         CharacterClass characterClass
 ) {
 }
