@@ -29,6 +29,10 @@ public class Character {
 
     public Character() {
     }
+
+
+
+
     // --- Getters and Setters ---
 
     // ID
