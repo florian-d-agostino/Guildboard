@@ -1,5 +1,16 @@
 package laplateforme.guildboard.dto.response;
 
-public class CharacterResponse {
+import laplateforme.guildboard.model.enums.*;
 
-}
+public record CharacterResponse(
+    long id,
+    String name,
+    CharacterGender gender,
+    CharacterClass characterClass,
+    int lvl,
+    int xp,
+    int wallet,
+    short completedQuest,
+    short totalQuest,
+    CharacterStatus status
+) {}
