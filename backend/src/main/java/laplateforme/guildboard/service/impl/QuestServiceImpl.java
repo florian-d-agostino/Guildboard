@@ -30,11 +30,9 @@ public class QuestServiceImpl implements QuestService {
     public QuestServiceImpl(
             QuestRepository questRepository,
             QuestMapper questMapper,
-            AssignmentRepository assignmentRepository,
             QuestCalculs questCalculs) {
         this.questRepository = questRepository;
         this.questMapper = questMapper;
-        this.assignmentRepository = assignmentRepository;
         this.questCalculs = questCalculs;
     }
 
