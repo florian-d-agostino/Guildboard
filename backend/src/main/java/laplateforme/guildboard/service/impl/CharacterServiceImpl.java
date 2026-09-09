@@ -9,7 +9,7 @@ import laplateforme.guildboard.dto.request.CreateCharacterRequest;
 import laplateforme.guildboard.dto.request.UpdateCharacterRequest;
 import laplateforme.guildboard.dto.response.CharacterHistory;
 import laplateforme.guildboard.dto.response.CharacterResponse;
-import laplateforme.guildboard.exception.BuisnessRuleExecption;
+import laplateforme.guildboard.exception.BusinessRuleException;
 import laplateforme.guildboard.exception.RessourceNotFoundException;
 import laplateforme.guildboard.mapper.CharacterMapper;
 import laplateforme.guildboard.model.Assignment;
@@ -67,7 +67,7 @@ public CharacterResponse getCharacterById(Long id){
 @Override
 public CharacterResponse createCharacter(CreateCharacterRequest request){
     if (characterRepository.existsByName(request.name())){
-        throw new BuisnessRuleExecption("Character name already exists...");
+        throw new BusinessRuleException("Character name already exists...");
     }
     Character character = new Character();
     character.setName(request.name());
@@ -91,7 +91,7 @@ public CharacterResponse updateCharacterById(Long id, UpdateCharacterRequest req
     .orElseThrow(() -> new RessourceNotFoundException("Character not found..."));
 
     if (!existingCharacter.getName().equals(request.name()) && characterRepository.existsByName(request.name())) {
-        throw new BuisnessRuleExecption("Character name already exists...");
+        throw new BusinessRuleException("Character name already exists...");
     }
 
     existingCharacter.setName(request.name());
