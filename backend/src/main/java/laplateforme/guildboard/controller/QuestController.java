@@ -31,7 +31,7 @@ public class QuestController {
     private final AssignmentService assignmentService;
 
 
-    public QuestController(QuestService questService) {
+    public QuestController(QuestService questService, AssignmentService assignmentService) {
         this.questService = questService;
         this.assignmentService = assignmentService;
 
