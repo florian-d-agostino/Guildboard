@@ -51,14 +51,12 @@ public AssignmentResponse assignCharacter(Long questId, AssignCharacterRequest r
 
 
     // Quest find
-    if (!questRepository.existsById(questId)){
-        throw new RessourceNotFoundException("Quest not found..." + questId);
-    }
+    Quest quest = questRepository.findById(questId)
+            .orElseThrow(() -> new RessourceNotFoundException("Quest not found..." + questId));
 
     // Character find
-    if (!characterRepository.existsById(request.characterId())){
-        throw new RessourceNotFoundException("Character not found..." + request.characterId());
-    }
+    Character character = characterRepository.findById(request.characterId())
+            .orElseThrow(() -> new RessourceNotFoundException("Character not found..." + request.characterId()));
 
     // Quest status
     if (quest.getStatus() != QuestStatus.AVAILABLE){
@@ -66,8 +64,8 @@ public AssignmentResponse assignCharacter(Long questId, AssignCharacterRequest r
     }
 
     // Character status
-    if (!characterRepository.findById(request.characterId()).get().getStatus().equals(CharacterStatus.READY)){
-        throw new BusinessRuleException("Character is not ready !");
+    if (character.getStatus() != CharacterStatus.READY) {
+    throw new BusinessRuleException("Character is not ready !");
     }
 
     // Level requierment in Quest (RG1)
@@ -83,17 +81,74 @@ public AssignmentResponse assignCharacter(Long questId, AssignCharacterRequest r
 }
 
 
-
-
-
-
-
 // Logic
+
+    Assignment assignment = new Assignment();
+    assignment.setQuest(quest);
+    assignment.setCharacter(character);
+    Assignment savedAssignment = assignmentRepository.save(assignment);
+
+    character.setStatus(CharacterStatus.BUSY);
+    characterRepository.save(character);
+
+    quest.setStatus(QuestStatus.IN_PROGRESS);
+    questRepository.save(quest);
+
+    return assignmentMapper.toResponse(savedAssignment);
+
+}
+
 
 @Override
 public QuestResponse completeQuest(Long questId) {
 
+    // Quest find
+    Quest quest = questRepository.findById(questId)
+    .orElseThrow(() -> new RessourceNotFoundException("Quest not found with id: " + questId));
+
+    // Quest Status
+    if (quest.getStatus() != QuestStatus.IN_PROGRESS) {
+    throw new BusinessRuleException("Quest is not in progress !");
 }
+
+    // Assignment find
+    Assignment assignment = assignmentRepository.findByQuestIdAndCompletedAtIsNull(questId)
+    .orElseThrow(() -> new RessourceNotFoundException("Active assignment not found for quest: " + questId));
+
+    // Get Character quest
+    Character character = assignment.getCharacter();
+
+    // Completed Assignment
+    assignment.setCompletedAt(LocalDateTime.now());
+    assignmentRepository.save(assignment);
+
+    // Completed Quest
+    quest.setStatus(QuestStatus.COMPLETED);
+    Quest savedQuest = questRepository.save(quest);
+
+    // Gold Reward
+    character.setWallet(character.getWallet() + quest.getGoldReward());
+
+    // Xp Reward
+    character.setXp(character.getXp() + quest.getXpReward());
+
+    // Level Up
+    while (character.getXp() >= character.getLvl()* 100) {
+   character.setXp(character.getXp() - (character.getLvl() *100));
+        character.setLvl(character.getLvl() + 1);
+    }    
+
+    // Character free
+    character.setStatus(CharacterStatus.READY);
+    characterRepository.save(character);
+
+    // DTO request
+    return questMapper.toResponse(savedQuest);
+
+
+
+}
+
 
 
 

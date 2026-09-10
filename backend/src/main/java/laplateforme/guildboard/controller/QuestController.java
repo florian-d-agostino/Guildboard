@@ -22,14 +22,18 @@ import laplateforme.guildboard.dto.response.QuestResponse;
 import laplateforme.guildboard.model.enums.QuestDifficulty;
 import laplateforme.guildboard.model.enums.QuestStatus;
 import laplateforme.guildboard.service.QuestService;
+import laplateforme.guildboard.service.AssignmentService;
 
 @RestController
 @RequestMapping("/api/quests")
 public class QuestController {
     private final QuestService questService;
+    private final AssignmentService assignmentService;
 
-    public QuestController(QuestService questService) {
+
+    public QuestController(QuestService questService, AssignmentService assignmentService) {
         this.questService = questService;
+        this.assignmentService = assignmentService;
 
     }
 
@@ -56,13 +60,13 @@ public class QuestController {
     @PostMapping("/{id}/assignment") // ASSIGN A CHARACTER TO A QUEST
     public ResponseEntity<AssignmentResponse> assignCharacter(@PathVariable Long id,
             @Valid @RequestBody AssignCharacterRequest request) {
-        AssignmentResponse assignment = questService.assignCharacter(id, request);
+        AssignmentResponse assignment = assignmentService.assignCharacter(id, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(assignment);
     }
 
     @PostMapping("/{id}/completion") // COMPLETE A QUEST
     public ResponseEntity<QuestResponse> completeQuest(@PathVariable Long id) {
-        QuestResponse quest = questService.completeQuest(id);
+        QuestResponse quest = assignmentService.completeQuest(id);
         return ResponseEntity.ok(quest);
     }
 
