@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: guildboard
+  profiles:
+    active: local
+  datasource:
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
