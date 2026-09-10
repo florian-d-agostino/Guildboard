@@ -8,15 +8,12 @@ import laplateforme.guildboard.mapper.QuestMapper;
 import laplateforme.guildboard.model.Quest;
 import laplateforme.guildboard.model.enums.QuestDifficulty;
 import laplateforme.guildboard.model.enums.QuestStatus;
-import laplateforme.guildboard.repository.AssignmentRepository;
 import laplateforme.guildboard.repository.QuestRepository;
 import laplateforme.guildboard.service.QuestService;
 import laplateforme.guildboard.service.util.QuestCalculs;
 import laplateforme.guildboard.exception.BusinessRuleException;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,12 +35,21 @@ public class QuestServiceImpl implements QuestService {
 
     // GET ALL QUESTS
     @Override
-    public List<QuestResponse> getAllQuests() {
-        List<QuestResponse> responses = new ArrayList<>();
-        for (Quest quest : questRepository.findAll()) {
-            responses.add(questMapper.toResponse(quest));
+    public List<QuestResponse> getAllQuests(QuestStatus status, QuestDifficulty difficulty) {
+
+        List<Quest> quests;
+
+        if (status != null && difficulty != null) {
+            quests = questRepository.findByStatusAndDifficulty(status, difficulty);
+        } else if (status != null) {
+            quests = questRepository.findByStatus(status);
+        } else if (difficulty != null) {
+            quests = questRepository.findByDifficulty(difficulty);
+        } else {
+            quests = questRepository.findAll();
         }
-        return responses;
+
+        return quests.stream().map(questMapper::toResponse).toList();
     }
 
     // GET QUEST BY ID
