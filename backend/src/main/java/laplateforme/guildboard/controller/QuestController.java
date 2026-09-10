@@ -33,6 +33,7 @@ public class QuestController {
 
     public QuestController(QuestService questService) {
         this.questService = questService;
+        this.assignmentService = assignmentService;
 
     }
 
