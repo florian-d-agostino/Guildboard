@@ -87,12 +87,20 @@ public class QuestServiceImpl implements QuestService {
 
     }
 
-    // UPDATE QUEST
+    // UPDATE QUEST BY ID
     @Override
     public QuestResponse updateQuestById(Long id, UpdateQuestRequest request) {
         Quest existingQuest = questRepository.findById(id).orElseThrow(
                 () -> new RessourceNotFoundException("Quest not found."));
 
+        // Check if quest is available
+        if (existingQuest.getStatus() == QuestStatus.IN_PROGRESS
+                || existingQuest.getStatus() == QuestStatus.COMPLETED) {
+            throw new BusinessRuleException("QUEST_NOT_MODIFIABLE",
+                    "Cannot modify a quest that is in progress or completed.");
+        }
+
+        // Check if quest exist
         if (!existingQuest.getTitle().equals(request.title()) && questRepository.existsByTitle(request.title())) {
             throw new BusinessRuleException("Quest title already exist.");
         }
@@ -114,11 +122,16 @@ public class QuestServiceImpl implements QuestService {
 
     }
 
+    // DELETE QUEST BY ID
     @Override
     public void deleteQuestById(Long id) {
         Quest existingQuest = questRepository.findById(id).orElseThrow(
                 () -> new RessourceNotFoundException("Quest not found."));
 
+        if (existingQuest.getStatus() == QuestStatus.IN_PROGRESS) {
+            throw new BusinessRuleException("QUEST_IN_PROGRESS",
+                    "Cannot delete a quest that is currently in progress.");
+        }
         questRepository.delete(existingQuest);
     }
 }
