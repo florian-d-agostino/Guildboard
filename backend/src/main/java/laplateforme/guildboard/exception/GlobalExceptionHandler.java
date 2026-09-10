@@ -16,19 +16,23 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleNotFound(RessourceNotFoundException ex) {
 
         ErrorResponse error = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(), ex.getMessage()); // CREATE JSON MESSAGE
+                HttpStatus.NOT_FOUND.value(),
+                "NOT_FOUND",
+                ex.getMessage()); // CREATE JSON MESSAGE
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error); // SEND
     }
 
-    // BUSINESS RULE ERROR HTTP 400 (Game logic violation)
+    // BUSINESS RULE ERROR HTTP 422 (Game logic violation)
     @ExceptionHandler(BusinessRuleException.class)
     public ResponseEntity<ErrorResponse> handleBusinessRuleException(BusinessRuleException ex) {
 
         ErrorResponse error = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(), ex.getMessage());
+                HttpStatus.UNPROCESSABLE_CONTENT.value(),
+                ex.getCode(),
+                ex.getMessage());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT).body(error);
 
     }
 
@@ -42,7 +46,10 @@ public class GlobalExceptionHandler {
                 .findFirst() // Take the first one
                 .orElse("Validation error"); // Default value if empty
 
-        ErrorResponse error = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), message);
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "VALIDATION_ERROR",
+                message);
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
@@ -51,7 +58,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
         ErrorResponse error = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(), "An unexpected internal error occurred.");
+                HttpStatus.INTERNAL_SERVER_ERROR.value(), 
+                "INTERNAL_SERVER_ERROR",
+                "An unexpected internal error occurred.");
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
