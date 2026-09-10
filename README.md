@@ -2,32 +2,48 @@
 
 ---------------------!!! IMPORTANT !!!--------------------
 
-1 - Install PostgresSQL
+### 1 - Install PostgreSQL (or Docker)
 
-2 - LINK DATABASE
+### 2 - Database Configuration
 
-Create .env file into backend folder with :
+Create the file `application-local.yml` in the folder `backend/src/main/resources/` with your database credentials:
 
-    DB_URL=jdbc:postgresql://localhost:5432/guildboard-bd
-    DB_USERNAME=username
-    DB_PASSWORD=password
+```yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/guildboard
+    username: <your_username>
+    password: <your_password>
+```
 
-3 - In terminal do :
+> **Note:** This file is ignored by Git (`.gitignore`) so your local credentials won't be committed.
 
-    createdb -U postgres guildboard
+### 3 - Create Database
 
-      or 
-    
-    (SQL)
-    CREATE DATABASE guildboard; 
+Make sure the database exists:
 
-      or 
+```bash
+createdb -U postgres guildboard
+```
 
-    (Docker)
-    docker exec -it guildboard-db createdb -U postgres guildboard-bd
+or with SQL:
+```sql
+CREATE DATABASE guildboard;
+```
 
-4 - Run the project into Backend folder
+or with Docker:
+```bash
+docker exec -it guildboard-db createdb -U postgres guildboard
+```
 
-    mvn spring-boot:run
+### 4 - Run the Project
+
+In the `backend` folder, run:
+
+```bash
+mvn spring-boot:run
+```
+
+Swagger UI is available at: `http://localhost:8080/swagger-ui.html`
 
 ---------------------!!! IMPORTANT !!!--------------------
