@@ -1,8 +1,8 @@
-export interface AssignmentCharacterRequest {
+export type AssignmentCharacterRequest = {
     characterId: number;
 }
 
-export interface AssignmentResponse {
+export type AssignmentResponse = {
     id: number;
     characterId: number;
     questId: number;
