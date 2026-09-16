@@ -8,7 +8,7 @@ export type CharacterStatus = "READY" | "BUSY"
 
 
 // CHARACTER
-export interface Character {
+export type Character = {
     id: number;
     status: CharacterStatus;
     name: string;
@@ -23,14 +23,14 @@ export interface Character {
 }
 
 // CREATE CHARACTER
-export interface CreateCharacterRequest {
+export type CreateCharacterRequest = {
     name: string;
     gender: CharacterGender;
     characterClass: CharacterClass;
 }
 
 // CHARACTER HISTORY
-export interface CharacterHistory {
+export type CharacterHistory = {
     id: number;
     questTitle: string;
     assignedAt: string;

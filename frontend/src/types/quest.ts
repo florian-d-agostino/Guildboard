@@ -2,7 +2,7 @@ export type QuestStatus = "AVAILABLE" | "IN_PROGRESS" | "COMPLETED"
 
 export type QuestDifficulty = "EASY" | "MEDIUM" | "HARD" | "EPIC"
 
-export interface Quest {
+export type Quest = {
     id: number;
     status: QuestStatus;
     title: string;
@@ -16,12 +16,12 @@ export interface Quest {
     completionTime: number;
 }
 
-export interface QuestFilters {
+export type QuestFilters = {
     status?: QuestStatus;
     difficulty?: QuestDifficulty;
 }
 
-export interface CreateQuestRequest {
+export type CreateQuestRequest = {
     title: string;
     description: string;
     difficulty: QuestDifficulty;
