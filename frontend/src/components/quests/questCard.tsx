@@ -1,6 +1,7 @@
 import React from "react";
 import type { Quest } from "../../types/quest";
-import { Badge, LevelBadge } from "../common";
+import { Badge } from "../common";
+import { LevelBadge } from "../characters";
 import { Button } from "../layout/button";
 
 

@@ -1,6 +1,7 @@
 import React from "react";
 import type { Character } from "../../types/character";
-import { CharacterAvatar, Badge } from "../common";
+import { CharacterAvatar } from "./characterAvatar";
+import { Badge } from "../common";
 import { Button } from "../layout/button";
 
 export interface CharacterCardProps {

@@ -24,9 +24,33 @@ export const Modal: React.FC<ModalProps> = ( {
     footer,
     size = "md",
 }) => { 
+
+
+
+   // Escape key close
+    useEffect(() => {
+        if (!isOpen) return;
+
+        
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                onClose();
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [isOpen, onClose]);
+
+
+
     if (!isOpen) return null;
-    
-    const sizeStyles = {
+
+
+
+
+        // Size dictionary
+        const sizeStyles = {
         sm : "max-w-sm",
         md : "max-w-md",
         lg : "max-w-lg",
@@ -71,7 +95,7 @@ export const Modal: React.FC<ModalProps> = ( {
 
 
             {/* Body */}
-            <div className={`p-6 overflow-y-auto max-h [75vh]`}>
+            <div className={`p-6 overflow-y-auto max-h-[75vh]`}>
                 {children}
             </div>
 
@@ -82,7 +106,7 @@ export const Modal: React.FC<ModalProps> = ( {
                     {footer}
                 </div>
             )}
-            
+            </div>
         </div>
     </div>
     );
