@@ -49,6 +49,10 @@ export function Guildboard() {
         }
     }
 
+    useEffect(() => {
+        loadData();
+    }, [statusFilter, difficultyFilter]);
+
     return (
         <div>
 
