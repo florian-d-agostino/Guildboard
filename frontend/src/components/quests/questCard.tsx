@@ -39,7 +39,8 @@ export const QuestCard: React.FC<QuestCardProps> = ({
 
     const handleCardClick = () => {
         onSelect?.(quest);
-        if (isAvailable) {
+        // Unfold accordion ONLY on mobile devices
+        if (isAvailable && typeof window !== "undefined" && window.innerWidth < 1024) {
             setIsExpanded((prev) => !prev);
         }
     };
@@ -65,7 +66,9 @@ export const QuestCard: React.FC<QuestCardProps> = ({
                     }
                 }
             }}
-            className={`flex flex-col p-3 rounded-xl border transition-all cursor-pointer select-none ${
+            className={`flex flex-col p-3 rounded-xl border transition-all select-none ${
+                isAvailable ? "cursor-pointer lg:cursor-default" : ""
+            } ${
                 isDragOver
                     ? "border-emerald-400 bg-emerald-950/40 ring-2 ring-emerald-500/50 scale-[1.01]"
                     : quest.status === "IN_PROGRESS" && !isReadyToClaim
@@ -147,11 +150,11 @@ export const QuestCard: React.FC<QuestCardProps> = ({
                 </div>
             </div>
 
-            {/* Mobile / Accordion view : Assign character list under the quest */}
+            {/* Mobile / Accordion view ONLY : Assign character list under the quest */}
             {isAvailable && isExpanded && (
                 <div
                     onClick={(e) => e.stopPropagation()}
-                    className="mt-3 pt-3 border-t border-neutral-700/60 flex flex-col gap-2 cursor-default"
+                    className="lg:hidden mt-3 pt-3 border-t border-neutral-700/60 flex flex-col gap-2 cursor-default"
                 >
                     <div className="flex items-center justify-between text-xs text-neutral-300">
                         <span className="font-semibold text-neutral-200">
