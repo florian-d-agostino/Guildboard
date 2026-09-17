@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "../layout/button";
 
 export interface ErrorAlertProps {
     message: string;
@@ -22,13 +23,13 @@ export const ErrorAlert: React.FC<ErrorAlertProps> =
                     <p className="text-sm font-medium">{message}</p>
                 </div>
                 {onRetry && (
-                    <button
-                        type="button"
+                    <Button
+                        variant="danger"
+                        size="sm"
                         onClick={onRetry}
-                        className="px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-red-100 bg-red-800/80 hover:bg-red-700 rounded-lg transition-colors cursor-pointer border border-red-700 shrink-0"
                     >
                         Retry
-                    </button>
+                    </Button>
                 )}
             </div>
         )
