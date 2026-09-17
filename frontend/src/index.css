@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+
+@theme {
+
+    /* Basic */
+    --color-guild-primary : #ff4b4b;
+    --color-guild-secondary : #4b6cb2;
+    --color-guild-dark : #4a4a4a;
+    --color-guild-light : #f5f5f5;
+    --color-guild-accent : #4b6cb2;
+
+
+    /* Difficulty */
+    --color-guild-green: #22c55e;
+    --color-guild-yellow: #eab308;
+    --color-guild-orange: #f97316;
+    --color-guild-red : #ef4444;
+    --color-guild-purple: #8b5cf6;
+}
+

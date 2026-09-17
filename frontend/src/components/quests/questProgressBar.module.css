@@ -1,0 +1,17 @@
+@keyframes knightRun {
+    from {
+        background-position: 0px -64px;
+    }
+    to {
+        background-position: -512px -64px;
+    }
+}
+
+.knightRunning {
+    width: 64px;
+    height: 64px;
+    background-image: url("/16x16%20knight%202%20v3.png");
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+    animation: knightRun 0.7s steps(8) infinite;
+}
