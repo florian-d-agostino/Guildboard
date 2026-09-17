@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { Loader, ErrorAlert, EmptyState } from "../components/common";
+import { Loader, ErrorAlert } from "../components/common";
 
 import { Header } from "../components/layout/header";
 
@@ -9,8 +9,6 @@ import { type Quest, type QuestStatus, type QuestDifficulty } from "../types/que
 import { type Character } from "../types/character";
 import { questService } from "../services/questService";
 import { characterService } from "../services/characterService";
-import { QuestCard } from "../components/quests/questCard";
-import { CharacterCard } from "../components/characters/characterCard";
 import { QuestList } from "../components/quests/questList";
 import { CharacterList } from "../components/characters/characterList";
 
