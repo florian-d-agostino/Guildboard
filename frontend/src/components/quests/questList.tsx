@@ -1,5 +1,6 @@
 import React from "react";
 import type { Quest, QuestStatus, QuestDifficulty } from "../../types/quest";
+import type { Character } from "../../types/character";
 import { QuestCard } from "./questCard";
 import { EmptyState } from "../common";
 import { Box } from "../layout/box";
@@ -10,9 +11,11 @@ export type QuestListProps = {
     difficultyFilter: QuestDifficulty | "ALL";
     onStatusFilterChange: (status: QuestStatus | "ALL") => void;
     onDifficultyFilterChange: (difficulty: QuestDifficulty | "ALL") => void;
+    availableCharacters?: Character[];
     selectedQuestId?: number | null;
     onSelectQuest?: (quest: Quest) => void;
     onCompleteQuest?: (quest: Quest) => void;
+    onAssignQuest?: (questId: number, characterId: number) => void;
 };
 
 export const QuestList: React.FC<QuestListProps> = ({
@@ -21,9 +24,11 @@ export const QuestList: React.FC<QuestListProps> = ({
     difficultyFilter,
     onStatusFilterChange,
     onDifficultyFilterChange,
+    availableCharacters = [],
     selectedQuestId,
     onSelectQuest,
     onCompleteQuest,
+    onAssignQuest,
 }) => {
     return (
         <Box
@@ -77,8 +82,10 @@ export const QuestList: React.FC<QuestListProps> = ({
                             key={quest.id}
                             quest={quest}
                             isSelected={selectedQuestId === quest.id}
+                            availableCharacters={availableCharacters}
                             onSelect={onSelectQuest}
                             onComplete={onCompleteQuest}
+                            onAssign={onAssignQuest}
                         />
                     ))}
                 </div>

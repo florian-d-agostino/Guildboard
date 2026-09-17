@@ -42,7 +42,7 @@ export const QuestProgressBar: React.FC<QuestProgressBarProps> = ({
             {/* Header info: remaining time and % */}
             <div className="flex items-center justify-between text-xs text-neutral-400">
                 <span className="flex items-center gap-1 font-mono">
-                    ⏳ {remainingSeconds > 0 ? `${remainingSeconds}s left` : "Done!"}
+                    {remainingSeconds > 0 ? `${remainingSeconds}s left` : "Done!"}
                 </span>
                 <span className="font-bold text-yellow-400 font-mono">
                     {percent}%
