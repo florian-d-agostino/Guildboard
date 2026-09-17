@@ -63,35 +63,44 @@ export const QuestForm: React.FC<QuestFormProps> = ({
 
             {/* Title Quest */}
             <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
-                    Quest Title
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400">
+                        Quest Title
+                    </label>
+                    <span className="text-[11px] text-neutral-500">
+                        {title.length}/100 (min. 5)
+                    </span>
+                </div>
                 <input
                     type="text"
                     required
+                    minLength={5}
+                    maxLength={100}
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-
-                    placeholder="Title..."
-
+                    placeholder="Quest title (min. 5 characters)..."
                     className="w-full bg-[#1a1818] border border-neutral-700 rounded-xl px-4 py-2.5 text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-400 transition-colors"
                 />
             </div>
 
-
             {/* Describe */}
             <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
-                    Description
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400">
+                        Description
+                    </label>
+                    <span className="text-[11px] text-neutral-500">
+                        {description.length}/500 (min. 10)
+                    </span>
+                </div>
                 <textarea
                     rows={3}
                     required
+                    minLength={10}
+                    maxLength={500}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-
-                    placeholder="Describe the quest..."
-
+                    placeholder="Describe the quest (min. 10 characters)..."
                     className="w-full bg-[#1a1818] border border-neutral-700 rounded-xl px-4 py-2.5 text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-400 transition-colors resize-none"
                 />
             </div>

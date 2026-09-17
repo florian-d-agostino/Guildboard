@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
         String message = ex.getBindingResult() // Get form errors
                 .getFieldErrors() // Look at bad fields
                 .stream() // Read one by one
-                .map(error -> error.getDefaultMessage()) // Get error text
+                .map(error -> error.getField() + " : " + error.getDefaultMessage()) // Get field + error text
                 .findFirst() // Take the first one
                 .orElse("Validation error"); // Default value if empty
 
