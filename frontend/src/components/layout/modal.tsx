@@ -75,30 +75,26 @@ export const Modal: React.FC<ModalProps> = ( {
 
 
             {/* Header */}
-
             <div className={"flex items-center justify-between px-6 py-4 border-b border-neutral-700 bg-neutral-800/60"}>
+                <h3 className={"text-lg font-bold text-white tracking-wide"}>
+                    {title}
+                </h3>
 
-            <h3 className={"text-lg font-bold text-white tracking-wide"}>
-                {title}
-            </h3>
-
-        {/* Close button */}
-            
-        <button 
-        type = "button"
-            onClick={onClose}
-            className={"text-neutral-400 hover:text-white hover:bg-neutral-700/60 text-xl leading-none w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer"}
-            aria-label="Close"
-            >
-            X
-            </button>
-
+                {/* Close button */}
+                <button 
+                    type="button"
+                    onClick={onClose}
+                    className={"text-neutral-400 hover:text-white hover:bg-neutral-700/60 text-xl leading-none w-8 h-8 rounded-lg flex items-center justify-center transition-colors cursor-pointer"}
+                    aria-label="Close"
+                >
+                    X
+                </button>
+            </div>
 
             {/* Body */}
             <div className={`p-6 overflow-y-auto max-h-[75vh]`}>
                 {children}
             </div>
-
 
             {/* Footer */}
             {footer && (
@@ -106,7 +102,6 @@ export const Modal: React.FC<ModalProps> = ( {
                     {footer}
                 </div>
             )}
-            </div>
         </div>
     </div>
     );
