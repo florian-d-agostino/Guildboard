@@ -1,13 +1,20 @@
 import { useState, useEffect } from "react";
 
+import { Loader, ErrorAlert, EmptyState } from "../components/common";
+
+import { Header } from "../components/layout/header";
+
+
 import { type Quest, type QuestStatus, type QuestDifficulty } from "../types/quest";
 import { type Character } from "../types/character";
-
 import { questService } from "../services/questService";
 import { characterService } from "../services/characterService";
-
 import { QuestCard } from "../components/quests/questCard";
 import { CharacterCard } from "../components/characters/characterCard";
+import { QuestList } from "../components/quests/questList";
+import { CharacterList } from "../components/characters/characterList";
+
+
 
 export function Guildboard() {
 
@@ -54,7 +61,32 @@ export function Guildboard() {
     }, [statusFilter, difficultyFilter]);
 
     return (
-        <div>
+        <div className="min-h-screen bg-[#1a1818] text-white p-6 md:p-10 flex flex-col gap-8">
+            <Header />
+
+            {errorMessage && (<ErrorAlert message={errorMessage} onRetry={loadData} />)}
+
+            {isLoading ? (<Loader message="Loading guild data..." size="lg" />) :
+
+                (<main className="flex flex-col lg:grid lg:grid-cols-12 gap-6 items-start w-full max-w-7xl mx-auto">
+
+                    {/* Character list */}
+                    <div className="w-full lg:col-span-5">
+                        <CharacterList characters={characters} />
+                    </div>
+
+                    {/* Quest list */}
+                    <div className="w-full lg:col-span-7">
+                        <QuestList
+                            quests={quests}
+                            statusFilter={statusFilter}
+                            difficultyFilter={difficultyFilter}
+                            onStatusFilterChange={setStatusFilter}
+                            onDifficultyFilterChange={setDifficultyFilter}
+                        />
+                    </div>
+
+                </main>)}
 
         </div>
     )
