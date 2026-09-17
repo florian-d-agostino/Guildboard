@@ -1,4 +1,3 @@
-import './App.css'
 import Guildboard from './pages/Guildboard'
 
 function App() {
