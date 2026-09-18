@@ -14,6 +14,7 @@ public record QuestResponse(
         int goldReward,
         int xpReward,
         byte slots,
+        byte assignedSlots,
         short successRate,
         short completionTime) {
 }

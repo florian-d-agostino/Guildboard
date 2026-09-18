@@ -22,6 +22,7 @@ public class QuestMapper {
                 quest.getGoldReward(),
                 quest.getXpReward(),
                 quest.getSlots(),
+                quest.getAssignedSlots(),
                 quest.getSuccessRate(),
                 quest.getCompletionTime());
     }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import laplateforme.guildboard.dto.request.CreateCharacterRequest;
 import laplateforme.guildboard.dto.request.UpdateCharacterRequest;
@@ -103,11 +104,18 @@ public CharacterResponse updateCharacterById(Long id, UpdateCharacterRequest req
 }
 
 // DeleteCharacterById
+@Transactional
 @Override
 public void deleteCharacterById(Long id) {
-Character existingCharacter = characterRepository.findById(id)
-.orElseThrow(() -> new RessourceNotFoundException("Character not found..."));
-characterRepository.delete(existingCharacter);
+    Character existingCharacter = characterRepository.findById(id)
+        .orElseThrow(() -> new RessourceNotFoundException("Character not found..."));
+
+    if (existingCharacter.getStatus() == CharacterStatus.BUSY) {
+        throw new BusinessRuleException("CHARACTER_BUSY", "Cannot dismiss a character who is currently on a quest.");
+    }
+
+    assignmentRepository.deleteByCharacterId(id);
+    characterRepository.delete(existingCharacter);
 }
 
 
@@ -121,14 +129,19 @@ public List<CharacterHistory> getCharacterHistory(Long characterId){
     List<Assignment> assignments = assignmentRepository.findByCharacterId(characterId);
     List<CharacterHistory> history = new ArrayList<>();
 
-    for (Assignment assignment : assignments) {
-        history.add(new CharacterHistory(
-            assignment.getId(),
-            assignment.getQuest().getTitle(),
-            assignment.getAssignedAt(),
-            assignment.getCompletedAt()
-        ));
-    }
+        for (Assignment assignment : assignments) {
+            laplateforme.guildboard.model.Quest quest = assignment.getQuest();
+            boolean isFailed = quest != null && quest.getStatus() == laplateforme.guildboard.enums.QuestStatus.FAILED;
+            history.add(new CharacterHistory(
+                assignment.getId(),
+                quest != null ? quest.getTitle() : "Unknown Quest",
+                assignment.getAssignedAt(),
+                assignment.getCompletedAt(),
+                isFailed ? 0 : (quest != null ? quest.getGoldReward() : 0),
+                isFailed ? 0 : (quest != null ? quest.getXpReward() : 0),
+                quest != null ? quest.getStatus().name() : "UNKNOWN"
+            ));
+        }
 
     return history;
 }

@@ -1,4 +1,4 @@
-export type QuestStatus = "AVAILABLE" | "IN_PROGRESS" | "COMPLETED"
+export type QuestStatus = "AVAILABLE" | "IN_PROGRESS" | "COMPLETED" | "FAILED";
 
 export type QuestDifficulty = "EASY" | "MEDIUM" | "HARD" | "EPIC"
 
@@ -12,6 +12,7 @@ export type Quest = {
     goldReward: number;
     xpReward: number;
     slots: number;
+    assignedSlots?: number;
     successRate: number;
     completionTime: number;
 }

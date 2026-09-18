@@ -12,5 +12,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     List<Assignment> findByQuestId(Long questId);
     List<Assignment> findByCharacterId(Long characterId);
     boolean existsByCharacterIdAndCompletedAtIsNull(Long characterId);
-    Optional<Assignment> findByQuestIdAndCompletedAtIsNull(Long questId);
+    List<Assignment> findByQuestIdAndCompletedAtIsNull(Long questId);
+    boolean existsByQuestIdAndCharacterIdAndCompletedAtIsNull(Long questId, Long characterId);
+    void deleteByCharacterId(Long characterId);
 }

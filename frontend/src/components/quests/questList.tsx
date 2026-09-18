@@ -52,6 +52,7 @@ export const QuestList: React.FC<QuestListProps> = ({
                         <option value="AVAILABLE">AVAILABLE</option>
                         <option value="IN_PROGRESS">IN_PROGRESS</option>
                         <option value="COMPLETED">COMPLETED</option>
+                        <option value="FAILED">FAILED</option>
                     </select>
 
                     {/* Difficulty filter */}
@@ -76,7 +77,13 @@ export const QuestList: React.FC<QuestListProps> = ({
                     description="No quests match your current filters. Try changing filters or create a new quest!"
                 />
             ) : (
-                <div className="flex flex-col gap-3 overflow-y-auto max-h-[65vh] pr-1">
+                <div
+                    onDragOver={(e) => {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = "move";
+                    }}
+                    className="flex flex-col gap-3 overflow-y-auto max-h-[65vh] pr-1"
+                >
                     {quests.map((quest) => (
                         <QuestCard
                             key={quest.id}

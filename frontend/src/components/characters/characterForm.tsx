@@ -45,7 +45,7 @@ export const CharacterForm: React.FC<CharacterFormProps> = ({
             {/* Name */}
             <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-neutral-400 mb-1.5">
-                    Adventurer Name
+                    Character Name
                 </label>
                 <input
                     type="text"

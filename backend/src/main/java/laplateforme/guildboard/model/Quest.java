@@ -58,6 +58,8 @@ public class Quest {
     @Positive
     private short completionTime;
 
+    private Byte assignedSlots = 0;
+
     // Getters & Setters
     public Long getId() {
         return id;
@@ -145,6 +147,14 @@ public class Quest {
 
     public void setCompletionTime(short completionTime) {
         this.completionTime = completionTime;
+    }
+
+    public byte getAssignedSlots() {
+        return assignedSlots != null ? assignedSlots : 0;
+    }
+
+    public void setAssignedSlots(Byte assignedSlots) {
+        this.assignedSlots = assignedSlots;
     }
 
     public Quest(Long id, QuestStatus status, String title, String description, QuestDifficulty difficulty, int minLvl,

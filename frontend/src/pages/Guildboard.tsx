@@ -65,7 +65,7 @@ export function Guildboard() {
             if (error instanceof Error) {
                 setErrorMessage(error.message);
             } else {
-                setErrorMessage("Failed to assign adventurer to this quest.");
+                setErrorMessage("Failed to assign character to this quest.");
             }
         }
     };

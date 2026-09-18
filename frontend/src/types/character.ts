@@ -35,6 +35,9 @@ export type CharacterHistory = {
     questTitle: string;
     assignedAt: string;
     completedAt: string | null;
+    goldReward: number;
+    xpReward: number;
+    questStatus?: string;
 }
 
 export type UpdateCharacterRequest = CreateCharacterRequest;

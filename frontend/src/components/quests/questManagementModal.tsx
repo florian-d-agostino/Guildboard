@@ -20,6 +20,7 @@ export const QuestManagementModal: React.FC<QuestManagementModalProps> = ({
     onRefresh,
 }) => {
     const [isCreating, setIsCreating] = useState(false);
+    const [editingQuest, setEditingQuest] = useState<Quest | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -33,6 +34,22 @@ export const QuestManagementModal: React.FC<QuestManagementModalProps> = ({
         } catch (err) {
             console.error("Failed to create quest:", err);
             setErrorMessage(err instanceof Error ? err.message : "Failed to create quest");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleUpdate = async (data: CreateQuestRequest) => {
+        if (!editingQuest) return;
+        try {
+            setIsLoading(true);
+            setErrorMessage(null);
+            await questService.update(editingQuest.id, data);
+            await onRefresh();
+            setEditingQuest(null);
+        } catch (err) {
+            console.error("Failed to update quest:", err);
+            setErrorMessage(err instanceof Error ? err.message : "Failed to update quest");
         } finally {
             setIsLoading(false);
         }
@@ -62,18 +79,27 @@ export const QuestManagementModal: React.FC<QuestManagementModalProps> = ({
         }
     };
 
+    const isFormOpen = isCreating || editingQuest !== null;
+
     return (
         <Modal
             isOpen={isOpen}
             onClose={() => {
                 setIsCreating(false);
+                setEditingQuest(null);
                 setErrorMessage(null);
                 onClose();
             }}
-            title={isCreating ? "Create New Quest" : "Quest Management"}
+            title={
+                editingQuest
+                    ? "Edit Quest"
+                    : isCreating
+                    ? "Create New Quest"
+                    : "Quest Management"
+            }
             size="lg"
             footer={
-                !isCreating ? (
+                !isFormOpen ? (
                     <Button
                         type="button"
                         variant="primary"
@@ -95,6 +121,13 @@ export const QuestManagementModal: React.FC<QuestManagementModalProps> = ({
                 <QuestForm
                     onSubmit={handleCreate}
                     onCancel={() => setIsCreating(false)}
+                    isLoading={isLoading}
+                />
+            ) : editingQuest ? (
+                <QuestForm
+                    initialData={editingQuest}
+                    onSubmit={handleUpdate}
+                    onCancel={() => setEditingQuest(null)}
                     isLoading={isLoading}
                 />
             ) : (
@@ -140,11 +173,23 @@ export const QuestManagementModal: React.FC<QuestManagementModalProps> = ({
                                 <div className="flex items-center gap-2 shrink-0">
                                     <Button
                                         type="button"
+                                        variant="secondary"
+                                        size="sm"
+                                        disabled={isLoading || quest.status !== "AVAILABLE"}
+                                        title={quest.status !== "AVAILABLE" ? "Only available quests can be edited" : "Edit quest"}
+                                        onClick={() => setEditingQuest(quest)}
+                                        className="text-xs py-1.5 px-2.5 font-semibold"
+                                    >
+                                        Edit
+                                    </Button>
+                                    <Button
+                                        type="button"
                                         variant="danger"
                                         size="sm"
-                                        disabled={isLoading || quest.status === "IN_PROGRESS"}
+                                        disabled={isLoading || quest.status === "IN_PROGRESS" || quest.status === "COMPLETED"}
+                                        title={quest.status === "COMPLETED" ? "Completed quests cannot be deleted" : quest.status === "IN_PROGRESS" ? "In-progress quests cannot be deleted" : "Delete quest"}
                                         onClick={() => handleDelete(quest.id)}
-                                        className="text-xs py-1.5 px-2.5"
+                                        className="text-xs py-1.5 px-2.5 font-semibold"
                                     >
                                         Delete
                                     </Button>
