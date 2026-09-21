@@ -53,7 +53,7 @@ export const CharacterForm: React.FC<CharacterFormProps> = ({
                     minLength={2}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Grimbold"
+                    placeholder="Florian"
                     className="w-full bg-[#1a1818] border border-neutral-700 rounded-xl px-4 py-2.5 text-white placeholder-neutral-500 focus:outline-none focus:border-neutral-400 transition-colors"
                 />
             </div>
