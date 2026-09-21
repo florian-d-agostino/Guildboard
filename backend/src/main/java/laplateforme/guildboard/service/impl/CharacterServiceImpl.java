@@ -131,7 +131,7 @@ public List<CharacterHistory> getCharacterHistory(Long characterId){
 
         for (Assignment assignment : assignments) {
             laplateforme.guildboard.model.Quest quest = assignment.getQuest();
-            boolean isFailed = quest != null && quest.getStatus() == laplateforme.guildboard.enums.QuestStatus.FAILED;
+            boolean isFailed = quest != null && quest.getStatus() == laplateforme.guildboard.model.enums.QuestStatus.FAILED;
             history.add(new CharacterHistory(
                 assignment.getId(),
                 quest != null ? quest.getTitle() : "Unknown Quest",

@@ -39,8 +39,8 @@ export const QuestCard: React.FC<QuestCardProps> = ({
 
     const handleCardClick = () => {
         onSelect?.(quest);
-        // Unfold accordion ONLY on mobile devices
-        if (isAvailable && typeof window !== "undefined" && window.innerWidth < 1024) {
+        // Unfold accordion on mobile devices to show description (and heroes if available)
+        if (typeof window !== "undefined" && window.innerWidth < 1024) {
             setIsExpanded((prev) => !prev);
         }
     };
@@ -185,6 +185,19 @@ export const QuestCard: React.FC<QuestCardProps> = ({
                     )}
                 </div>
             </div>
+
+            {/* Quest Description: always on web (lg:block), conditionally on mobile when expanded */}
+            {quest.description && (
+                <div
+                    className={`text-xs text-neutral-300 leading-relaxed mt-2.5 pt-2 border-t border-neutral-800/80 ${
+                        isExpanded ? "block" : "hidden lg:block"
+                    }`}
+                >
+                    <p className="line-clamp-2 lg:line-clamp-3 italic text-neutral-400">
+                        "{quest.description}"
+                    </p>
+                </div>
+            )}
 
             {/* Mobile / Accordion view ONLY : Assign character list under the quest */}
             {isAvailable && isExpanded && (
