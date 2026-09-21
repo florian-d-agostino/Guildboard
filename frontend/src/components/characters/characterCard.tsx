@@ -3,7 +3,6 @@ import type { Character, CharacterHistory } from "../../types/character";
 import { characterService } from "../../services/characterService";
 import { CharacterAvatar } from "./characterAvatar";
 import { Badge, Loader } from "../common";
-import { Button } from "../layout/button";
 
 export interface CharacterCardProps {
     character: Character;
@@ -14,11 +13,11 @@ export interface CharacterCardProps {
 export const CharacterCard: React.FC<CharacterCardProps> = ({
     character,
     isSelected = false,
-    onLaunch,
 }) => {
     const [isExpanded, setIsExpanded] = useState<boolean>(false);
     const [history, setHistory] = useState<CharacterHistory[] | null>(null);
     const [isLoadingHistory, setIsLoadingHistory] = useState<boolean>(false);
+    const [isDragging, setIsDragging] = useState<boolean>(false);
 
     const maxXp = Math.max(1, character.lvl * 100);
     const xpPercent = Math.min(100, Math.round((character.xp / maxXp) * 100));
@@ -42,12 +41,59 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
         }
     };
 
+    const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+        e.dataTransfer.setData("characterId", character.id.toString());
+        e.dataTransfer.effectAllowed = "move";
+
+        // Clean solid drag preview without browser semi-transparency
+        const dragPreview = document.createElement("div");
+        dragPreview.style.position = "fixed";
+        dragPreview.style.top = "-9999px";
+        dragPreview.style.left = "-9999px";
+        dragPreview.style.padding = "8px 14px";
+        dragPreview.style.borderRadius = "10px";
+        dragPreview.style.backgroundColor = "#282525";
+        dragPreview.style.color = "#ffffff";
+        dragPreview.style.border = "2px solid #eab308";
+        dragPreview.style.fontWeight = "bold";
+        dragPreview.style.fontSize = "13px";
+        dragPreview.style.boxShadow = "0 8px 20px rgba(0,0,0,0.8)";
+        dragPreview.style.zIndex = "99999";
+        dragPreview.style.pointerEvents = "none";
+        dragPreview.innerText = `⚔️ ${character.name} (Lvl ${character.lvl} ${character.characterClass})`;
+        document.body.appendChild(dragPreview);
+
+        e.dataTransfer.setDragImage(dragPreview, 25, 20);
+
+        setTimeout(() => {
+            if (document.body.contains(dragPreview)) {
+                document.body.removeChild(dragPreview);
+            }
+            // Disappear from characters list while dragging
+            setIsDragging(true);
+        }, 0);
+    };
+
+    const handleDragEnd = () => {
+        // Reappear when drop is finished or cancelled
+        setIsDragging(false);
+    };
+
+    if (isDragging) {
+        // Completely invisible / collapsed while being dragged
+        return (
+            <div
+                onDragEnd={handleDragEnd}
+                className="opacity-0 h-0 p-0 m-0 border-0 pointer-events-none overflow-hidden"
+            />
+        );
+    }
+
     return (
         <div
             draggable={character.status === "READY"}
-            onDragStart={(e) => {
-                e.dataTransfer.setData("characterId", character.id.toString());
-            }}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
             onClick={handleToggleExpand}
             className={`flex flex-col p-3.5 rounded-xl border transition-all select-none cursor-pointer ${
                 isSelected
@@ -55,7 +101,7 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                     : "bg-[#282525] text-white border-neutral-800 hover:border-neutral-700 hover:shadow-lg"
             } ${character.status === "READY" ? "cursor-grab active:cursor-grabbing" : ""}`}
         >
-            {/* Header row: Avatar, Info, Gold, Launch Button */}
+            {/* Header row: Avatar, Info, Gold, Status Badge */}
             <div className="flex items-center justify-between gap-3">
                 {/* Left: Avatar + Details */}
                 <div className="flex items-center gap-3">
@@ -87,27 +133,16 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                     </div>
                 </div>
 
-                {/* Right: Gold + Action button */}
+                {/* Right: Gold + Status badge */}
                 <div className="flex items-center gap-3">
                     <div className="flex flex-col items-center justify-center w-12 h-12 bg-neutral-300 text-neutral-900 rounded font-bold text-xs shadow-inner">
                         <span>{character.wallet}</span>
                         <span className="text-[10px]">Gold</span>
                     </div>
 
-                    {character.status === "READY" ? (
-                        <Button
-                            variant="danger"
-                            size="sm"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                onLaunch?.(character);
-                            }}
-                        >
-                            LAUNCH QUEST
-                        </Button>
-                    ) : (
-                        <Badge variant="dark">BUSY</Badge>
-                    )}
+                    <Badge variant={character.status === "READY" ? "green" : "dark"} size="sm">
+                        {character.status}
+                    </Badge>
                 </div>
             </div>
 
@@ -149,22 +184,43 @@ export const CharacterCard: React.FC<CharacterCardProps> = ({
                             </p>
                         ) : (
                             <div className="flex flex-col gap-1.5 max-h-36 overflow-y-auto pr-1">
-                                {history.map((item) => (
-                                    <div
-                                        key={item.id}
-                                        className="flex items-center justify-between p-2 bg-neutral-800/60 rounded-lg border border-neutral-700/50"
-                                    >
-                                        <span className="font-semibold text-neutral-200">
-                                            {item.questTitle}
-                                        </span>
-                                        <Badge
-                                            variant={item.completedAt ? "green" : "orange"}
-                                            size="sm"
+                                {history.map((item) => {
+                                    const isFailed = item.questStatus === "FAILED";
+                                    const isCompleted = item.completedAt !== null && !isFailed;
+                                    return (
+                                        <div
+                                            key={item.id}
+                                            className="flex items-center justify-between p-2 bg-neutral-800/60 rounded-lg border border-neutral-700/50"
                                         >
-                                            {item.completedAt ? "COMPLETED" : "ON GOING"}
-                                        </Badge>
-                                    </div>
-                                ))}
+                                            <div className="flex flex-col gap-0.5">
+                                                <span className="font-semibold text-neutral-200">
+                                                    {item.questTitle}
+                                                </span>
+                                                {isCompleted && (
+                                                    <div className="flex items-center gap-2 text-[10px]">
+                                                        <span className="text-yellow-400 font-bold">
+                                                            +{item.goldReward ?? 0} Gold
+                                                        </span>
+                                                        <span className="text-blue-400 font-bold">
+                                                            +{item.xpReward ?? 0} XP
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {isFailed && (
+                                                    <div className="text-[10px] text-red-400 font-medium">
+                                                        No rewards (Quest failed)
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <Badge
+                                                variant={isFailed ? "red" : item.completedAt ? "green" : "orange"}
+                                                size="sm"
+                                            >
+                                                {isFailed ? "FAILED" : item.completedAt ? "COMPLETED" : "ON GOING"}
+                                            </Badge>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         )}
                     </div>

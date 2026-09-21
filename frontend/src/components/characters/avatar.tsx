@@ -15,7 +15,7 @@ export const Avatar: React.FC<AvatarProps> = ({
 }) => {
   return (
     <img
-      src={src || `https://api.dicebear.com/7.x/bottts/svg?seed=${alt}`}
+      src={src || `https://api.dicebear.com/7.x/adventurer/svg?seed=${alt}`}
       alt={alt}
       className={`rounded-full object-cover bg-neutral-900 select-none ${className}`}
       style={{ width: size, height: size }}

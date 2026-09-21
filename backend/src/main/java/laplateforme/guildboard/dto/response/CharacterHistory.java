@@ -6,5 +6,8 @@ public record CharacterHistory(
         long id,
         String questTitle,
         LocalDateTime assignedAt,
-        LocalDateTime completedAt
+        LocalDateTime completedAt,
+        int goldReward,
+        int xpReward,
+        String questStatus
 ){}

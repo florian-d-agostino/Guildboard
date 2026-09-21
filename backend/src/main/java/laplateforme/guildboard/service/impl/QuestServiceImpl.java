@@ -95,9 +95,10 @@ public class QuestServiceImpl implements QuestService {
 
         // Check if quest is available
         if (existingQuest.getStatus() == QuestStatus.IN_PROGRESS
-                || existingQuest.getStatus() == QuestStatus.COMPLETED) {
+                || existingQuest.getStatus() == QuestStatus.COMPLETED
+                || existingQuest.getStatus() == QuestStatus.FAILED) {
             throw new BusinessRuleException("QUEST_NOT_MODIFIABLE",
-                    "Cannot modify a quest that is in progress or completed.");
+                    "Cannot modify a quest that is in progress, completed or failed.");
         }
 
         // Check if quest exist
@@ -128,9 +129,11 @@ public class QuestServiceImpl implements QuestService {
         Quest existingQuest = questRepository.findById(id).orElseThrow(
                 () -> new RessourceNotFoundException("Quest not found."));
 
-        if (existingQuest.getStatus() == QuestStatus.IN_PROGRESS) {
-            throw new BusinessRuleException("QUEST_IN_PROGRESS",
-                    "Cannot delete a quest that is currently in progress.");
+        if (existingQuest.getStatus() == QuestStatus.IN_PROGRESS
+                || existingQuest.getStatus() == QuestStatus.COMPLETED
+                || existingQuest.getStatus() == QuestStatus.FAILED) {
+            throw new BusinessRuleException("QUEST_NOT_DELETABLE",
+                    "Cannot delete a quest that is in progress, completed or failed.");
         }
         questRepository.delete(existingQuest);
     }
